@@ -2,7 +2,7 @@
 
 A reusable Java library of Selenium UI interactions with configurable locators, centralized waits and typed exceptions. It is a plain Maven library: no frontend, REST API, backend or database.
 
-> **Status:** Phases 1 (foundation), 2 (`ButtonClicker`, `Sidebar`) and 3 (JUnit 5 integration) are complete.
+> **Status:** Phases 1 (foundation), 2 (`ButtonClicker`, `Sidebar`) 3 (JUnit 5 integration) and 4 (demo) are complete.
 
 ## Requirements
 
@@ -17,13 +17,36 @@ mvn clean verify
 
 Unit tests (`*Test`) run in `surefire`; fixture-based browser tests (`*IT`) run in `failsafe`. Javadoc is checked in `verify` and fails on warnings.
 
+## Install into your own project
+
+The artifacts are not on Maven Central yet. Install them into your local repository once:
+
+```
+git clone https://github.com/mudassorahmedchowdhury/java-selenium-function-main.git
+cd java-selenium-function-main
+mvn clean install        # or: mvn install -DskipTests
+```
+
+Then, in any Selenium project (Java 17+):
+
+```xml
+<dependency>
+    <groupId>com.uikit</groupId>
+    <artifactId>uikit-core</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
+This was verified with a separate Maven project that depends only on `uikit-core` (plus Selenium's Chrome driver and JUnit for its test) and clicks a button via `new ButtonClicker(driver).clickButtonByText("Go")`.
+`uikit-core` brings Selenium API and support transitively; add `selenium-chrome-driver` (or another driver) yourself. SLF4J output needs a binding such as `slf4j-simple`.
+
 ## Modules
 
 | Module | Status |
 |---|---|
 | `uikit-core` | Phases 1-2: waits, typed exceptions, `ButtonClicker`, `Sidebar` |
 | `uikit-testing` | Phase 3: `@UiKitTest` JUnit 5 extension |
-| `uikit-demo` | planned (examples) |
+| `uikit-demo` | Phase 4: page objects and example tests |
 
 ## Dependency scopes (`uikit-core`)
 
@@ -93,6 +116,18 @@ class CheckoutTest {
 - Run with a visible browser: `-Duikit.headed=true`.
 - Scopes: `uikit-core`, `junit-jupiter-api` and `selenium-chrome-driver` are compile scope; `junit-platform-launcher` is test only.
 - Selenium Manager (bundled with Selenium) downloads the driver. Use your own `DriverFactory` if your network blocks that.
+
+## Demo (Phase 4, `uikit-demo`)
+
+`uikit-demo` is an example consumer, not a published artifact; all its dependencies are test scope. It shows the intended structure:
+
+- `src/test/resources/app/index.html`: a local demo app (login, sidebar, modal, iframe).
+- `pages/LoginPage`, `pages/InventoryApp`: page objects that hold **all** application-specific locators and pass them to the generic components.
+- `InventoryAppIT`: tests using `@UiKitTest` and the injected `UiContext`.
+
+Run just the demo: `mvn -pl uikit-demo -am verify`.
+
+There are no tests against external websites in the build. If you add some, keep them out of the default lifecycle (for example behind a Maven profile).
 
 ## Breaking changes vs. the original repository
 

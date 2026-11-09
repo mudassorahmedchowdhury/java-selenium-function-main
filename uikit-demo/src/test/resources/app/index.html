@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Demo Inventory App</title>
+<style>
+  .sub{display:none} .open>.sub{display:block}
+  .modal{display:none;border:1px solid #888;padding:8px} .modal.show{display:block}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<section id="login-view">
+  <input id="username" type="text" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button type="button" onclick="login()">Login</button>
+  <div id="login-error" role="alert"></div>
+</section>
+
+<section id="app-view" class="hidden">
+  <ul class="menu-parent">
+    <li onclick="this.classList.toggle('open')">
+      <span>Inventory</span>
+      <ul class="sub">
+        <li onclick="event.stopPropagation(); show('Items page')">Items</li>
+        <li onclick="event.stopPropagation(); show('Stock page')">Stock</li>
+      </ul>
+    </li>
+    <li onclick="show('Dashboard page')"><span>Dashboard</span></li>
+  </ul>
+
+  <h1 id="page-title"></h1>
+  <button type="button" onclick="document.getElementById('modal').classList.add('show')">Add item</button>
+  <div id="status"></div>
+
+  <div id="modal" class="modal">
+    <p>New item</p>
+    <button type="button" onclick="setStatus('Item saved'); closeModal()">Save</button>
+    <button type="button" onclick="closeModal()">Cancel</button>
+  </div>
+
+  <iframe id="help" srcdoc="<button onclick=&quot;parent.setStatus('Support contacted')&quot;>Contact support</button>"></iframe>
+</section>
+
+<script>
+  function login() {
+    var ok = document.getElementById('username').value === 'admin'
+          && document.getElementById('password').value === 'secret';
+    if (ok) {
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('app-view').classList.remove('hidden');
+      show('Dashboard page');
+    } else {
+      document.getElementById('login-error').textContent = 'Invalid credentials';
+    }
+  }
+  function show(t) { document.getElementById('page-title').textContent = t; }
+  function setStatus(t) { document.getElementById('status').textContent = t; }
+  function closeModal() { document.getElementById('modal').classList.remove('show'); }
+</script>
+</body>
+</html>
