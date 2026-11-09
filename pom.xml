@@ -14,7 +14,7 @@
     <modules>
         <module>uikit-core</module>
         <module>uikit-testing</module>
-        <!-- uikit-demo is added in a later phase -->
+        <module>uikit-demo</module>
     </modules>
 
     <properties>
@@ -30,6 +30,11 @@
             <dependency>
                 <groupId>com.uikit</groupId>
                 <artifactId>uikit-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.uikit</groupId>
+                <artifactId>uikit-testing</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
