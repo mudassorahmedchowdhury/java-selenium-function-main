@@ -1,191 +1,106 @@
-# Automation Toolkit: Dynamic Button Clicking and Sidebar Navigation with Java - Selenium 
+# Java Selenium UI Kit
 
-This project provides a flexible and reusable solution for automating sidebar navigation and button clicks in web applications using Selenium WebDriver. The `Sidebar` class dynamically locates and interacts with parent and child sidebar items, and the `ButtonClicker` class provides convenient methods for interacting with buttons, both within modals and iframes.
+A reusable Java library of Selenium UI interactions with configurable locators, centralized waits and typed exceptions. It is a plain Maven library: no frontend, REST API, backend or database.
 
-## Features
+> **Status:** Phases 1 (foundation), 2 (`ButtonClicker`, `Sidebar`) and 3 (JUnit 5 integration) are complete.
 
-- **Dynamic Sidebar Navigation:** Easily interact with parent and child items in the sidebar.
-- **Minimal Locators:** Uses flexible XPath locators to handle sidebar items.
-- **Error Handling:** Proper checks and error handling to ensure robustness.
-- **Reusable Classes:** Can be used across different modules without needing new locators.
-- **Button Click Handling:** Convenient methods to click buttons by their text, including buttons in modals and iframes.
+## Requirements
 
-## Table of Contents
+- Java 17+, Maven 3.9+
+- Google Chrome (integration tests run headless Chrome; Selenium Manager fetches the driver)
 
-- [Installation](#installation)
-- [Usage](#usage)
-    - [Sidebar Navigation](#sidebar-navigation)
-    - [Button Click Handling](#button-click-handling)
-- [Code Walkthrough](#code-walkthrough)
-    - [Sidebar Class](#sidebar-class)
-    - [ButtonClicker Class](#buttonclicker-class)
-- [Functionality Overview](#functionality-overview)
-- [Credits](#credits)
+## Build
 
-## Installation
+```
+mvn clean verify
+```
 
-1. Clone this repository to your local machine.
-2. Ensure you have the following dependencies in your `pom.xml` or build file:
-    - `selenium-java`
-    - `JUnit` (or any other testing framework)
-    - A WebDriver executable (e.g., `chromedriver` for Chrome)
-3. Import the classes into your project.
+Unit tests (`*Test`) run in `surefire`; fixture-based browser tests (`*IT`) run in `failsafe`. Javadoc is checked in `verify` and fails on warnings.
+
+## Modules
+
+| Module | Status |
+|---|---|
+| `uikit-core` | Phases 1-2: waits, typed exceptions, `ButtonClicker`, `Sidebar` |
+| `uikit-testing` | Phase 3: `@UiKitTest` JUnit 5 extension |
+| `uikit-demo` | planned (examples) |
+
+## Dependency scopes (`uikit-core`)
+
+| Dependency | Scope | Why |
+|---|---|---|
+| `selenium-api`, `selenium-support` | compile | Selenium types are part of the public API |
+| `slf4j-api` | compile | Logging facade only; consumers pick the binding |
+| `selenium-java`, `junit-jupiter`, `slf4j-simple` | test | Headless Chrome tests only |
+
+## Usage (Phase 1)
+
+```java
+Waits waits = new Waits(driver, WaitConfig.of(Duration.ofSeconds(5), Duration.ofMillis(100)));
+WebElement el = waits.clickable(By.id("submit"));   // locator is always supplied by you
+```
+
+Failures throw `UiKitTimeoutException` (a `UiKitException`). Also available: `ElementNotFoundException`, `AmbiguousElementException`.
+
+## Components (Phase 2)
+
+All components share a `UiContext` (driver + centralized `Waits` + click policy). Clicks are native Selenium by default; JavaScript fallback is **opt-in** via `withJsClickFallback()`.
+
+```java
+UiContext ctx = UiContext.of(driver)
+        .withWaitConfig(WaitConfig.of(Duration.ofSeconds(5)));   // optional
+        // .withJsClickFallback();                               // optional, opt-in
+
+ButtonClicker buttons = new ButtonClicker(ctx, ButtonLocator.exactText());
+buttons.clickButtonByText("Save")
+       .clickButtonInContainer(By.cssSelector(".modal.show"), "Confirm")   // you supply the container
+       .clickButtonInFrame(By.id("payment-frame"), "Pay");
+
+SidebarLocators nav = SidebarLocators.of(
+        name -> By.xpath("//li[span[normalize-space()=" + XPaths.literal(name) + "]]"),   // parent, page-wide
+        name -> By.xpath(".//li[normalize-space()=" + XPaths.literal(name) + "]"));       // child, within parent
+new Sidebar(ctx, nav).clickItem("Inventory", "Items");
+```
+
+- `ButtonLocator`: `exactText()` (buttons, `input[type=button|submit|reset]`, `role=button`), `exactTextIgnoreCase()`, or `ButtonLocator.of(label -> By...)` for your own markup.
+- Elements must be displayed; no match throws `ElementNotFoundException`, several matches throw `AmbiguousElementException`, a failed native click throws `ClickFailedException`.
+- `XPaths.literal(...)` safely quotes text for XPath.
+
+## JUnit 5 integration (Phase 3, `uikit-testing`, optional)
 
 ```xml
 <dependency>
-    <groupId>org.seleniumhq.selenium</groupId>
-    <artifactId>selenium-java</artifactId>
-    <version>4.0.0</version>
+    <groupId>com.uikit</groupId>
+    <artifactId>uikit-testing</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <scope>test</scope>
 </dependency>
 ```
 
-## Usage
-### Sidebar Navigation
-#### Step 1: Initialize the Sidebar Class
-First, instantiate the `Sidebar` class by passing the `WebDriver` instance to the constructor. This allows the `Sidebar` class to interact with the browser.
 ```java
-WebDriver driver = new ChromeDriver();
-Sidebar sidebar = new Sidebar(driver);
-```
-#### Step 2: Interact with Sidebar Items
-##### Click on a Parent Item Only
-If you need to click only a parent module, such as "Dashboard", simply call the clickItem() method with the parent name.
-```java
-sidebar.clickItem("Dashboard");
-```
-##### Click on a Parent and a Child Item
-To click on a child item within a parent module (e.g., "Settings" under "Admin"), provide both the parent and child names.
-```java
-sidebar.clickItem("Admin", "Settings");
-```
-
-### Button Click Handling
-The `ButtonClicker` class provides functionality to click buttons, both on the main page and within `modals` or `iframes`.
-#### Step 1: Initialize the ButtonClicker Class
-First, create an instance of the `ButtonClicker` class by passing the `WebDriver` instance.
-```java
-ButtonClicker buttonClicker = new ButtonClicker(driver);
-```
-
-#### Step 2: Click Buttons by Text
-##### Click a Button by Text
-Use the `clickButtonByText()` method to click a button by its visible text:
-
-```java
-buttonClicker.clickButtonByText("Submit");
-```
-#### Click a Button Inside a Modal
-If you need to click a button inside an active modal, you can use the `clickButtonInModal()` method:
-
-```java
-buttonClicker.clickButtonInModal("Close");
-```
-
-#### Click a Button Inside an Iframe
-To click a button inside an `iframe`, use the `clickButtonInIframe()` method:
-
-```java
-buttonClicker.clickButtonInIframe("iframe-id", "Save");
-```
-### Code Walkthrough
-#### Sidebar Class
-The Sidebar class provides the functionality to interact with both parent and child items in the sidebar.
-
-```java
-public class Sidebar {
-private WebDriver driver;
-private WebDriverWait wait;
-
-    public Sidebar(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+@UiKitTest                                   // headless Chrome per test, quit afterwards
+class CheckoutTest {
+    @Test
+    void saves(WebDriver driver, UiContext ctx) {   // injectable in tests and @BeforeEach
+        driver.get("file:///.../page.html");
+        new ButtonClicker(ctx, ButtonLocator.exactText()).clickButtonByText("Save");
     }
 }
 ```
 
-#### Click Item Method
-The `clickItem()` method accepts the parent name and optionally the child name, allowing flexible interactions with the sidebar.
+- `@UiKitTest` options: `headless`, `windowWidth/Height`, `timeoutMillis`, `pollingMillis`, `jsClickFallback` (opt-in), `screenshotDir` (empty disables), `factory` (custom `DriverFactory` for other browsers or a grid).
+- A failed test saves `<Class>.<method>.png` in `target/uikit-screenshots` and is still reported as failed.
+- Run with a visible browser: `-Duikit.headed=true`.
+- Scopes: `uikit-core`, `junit-jupiter-api` and `selenium-chrome-driver` are compile scope; `junit-platform-launcher` is test only.
+- Selenium Manager (bundled with Selenium) downloads the driver. Use your own `DriverFactory` if your network blocks that.
 
-```java
-public void clickItem(String parentName, String childName) {
-List<WebElement> parents = driver.findElements(By.xpath(FunctionsLocators.PARENT_ITEM_XPATH));
-    for (WebElement parent : parents) {
-        if (parent.getText().trim().equals(parentName)) {
-            parent.click();
-            if (childName != null && !childName.isEmpty()) {
-                List<WebElement> children = parent.findElements(By.xpath(FunctionsLocators.CHILD_ITEM_XPATH));
-                for (WebElement child : children) {
-                    if (child.getText().trim().equals(childName)) {
-                        child.click();
-                        break;
-                    }
-                }
-            }
-            break;
-        }
-    }
-}
-```
-#### ButtonClicker Class
-The `ButtonClicker` class provides methods to click buttons on the main page, within modals, and iframes. Here's the structure:
+## Breaking changes vs. the original repository
 
-```java
-public class ButtonClicker {
-private WebDriver driver;
-private WebDriverWait wait;
+- `ButtonClicker`/`Sidebar` now live in `com.uikit.core.component`. `clickButtonInModal(text)` became `clickButtonInContainer(By, text)` and `clickButtonInIframe(String, text)` became `clickButtonInFrame(By, text)`; `Sidebar` requires `SidebarLocators` (the site-specific defaults were removed). Missing sidebar items now throw instead of printing.
 
-    public ButtonClicker(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    }
-}
-```
-#### Click Button Methods
-The `clickButtonByText()` method is used to click a button by its visible text, while `clickButtonInModal()` and `clickButtonInIframe()` help interact with buttons inside modals and iframes.
-
-```java
-public ButtonClicker clickButtonByText(String buttonText) {
-WebElement button = findButton(buttonText);
-if (button != null) {
-button.click();
-}
-return this;
-}
-
-public ButtonClicker clickButtonInModal(String buttonText) {
-WebElement modal = findActiveModal();
-if (modal != null) {
-WebElement button = modal.findElement(By.xpath(FunctionsLocators.generateButtonXpath(buttonText)));
-button.click();
-}
-return this;
-}
-
-public ButtonClicker clickButtonInIframe(String iframeId, String buttonText) {
-driver.switchTo().frame(iframeId);
-WebElement button = findButton(buttonText);
-if (button != null) {
-button.click();
-}
-driver.switchTo().defaultContent();
-return this;
-}
-```
-### Functionality Overview
-#### Sidebar Class
-- **clickItem(String parentName):** Clicks the specified parent item.
-- **clickItem(String parentName, String childName):** Clicks both the specified parent and child items.
-ButtonClicker Class
-- **clickButtonByText(String buttonText):** Clicks a button by its visible text.
-- **clickButtonInModal(String buttonText):** Clicks a button inside a modal.
-- **clickButtonInIframe(String iframeId, String buttonText):** 
+- Maven coordinates are now `com.uikit:uikit-parent`; Java baseline is 17 (was 23); TestNG, JUnit 4, Allure, WebDriverManager and commons-io are removed.
+- The original sources (`ButtonClicker`, `Sidebar`, site-specific locators, `LoginPage`, tests) are preserved unchanged under `legacy/` and are **not** part of the build. Known issues to fix when porting: `System.out` logging, silent failure in `Sidebar`, site-specific locators, lower-casing text against XPath `contains`, hard-coded 10 s/2 s waits.
 
 ## Credits
-This solution was developed by [Mudassor Ahmed Chowdhury](https://www.linkedin.com/in/mudassor/) – feel free to connect on LinkedIn!
 
-
-
-
-
-
-
+Original work by [Mudassor Ahmed Chowdhury](https://www.linkedin.com/in/mudassor/).

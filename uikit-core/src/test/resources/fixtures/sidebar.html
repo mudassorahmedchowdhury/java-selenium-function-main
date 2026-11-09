@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Sidebar fixture</title>
+<style>.sub{display:none}.open .sub{display:block}</style></head>
+<body>
+<div id="result"></div>
+<nav>
+  <ul class="nav-root">
+    <li class="nav-parent" onclick="this.classList.toggle('open'); r('parent:' + this.firstElementChild.textContent)">
+      <span>Inventory</span>
+      <ul class="sub">
+        <li class="nav-child" onclick="event.stopPropagation(); r('child:Items')">Items</li>
+        <li class="nav-child" onclick="event.stopPropagation(); r('child:Stock')">Stock</li>
+      </ul>
+    </li>
+    <li class="nav-parent" onclick="r('parent:Dashboard')"><span>Dashboard</span></li>
+  </ul>
+</nav>
+<script>function r(v){document.getElementById('result').textContent=v;}</script>
+</body>
+</html>

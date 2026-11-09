@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Waits fixture</title></head>
+<body>
+<button id="present">Present</button>
+<div id="hidden" style="display:none">Hidden</div>
+<button id="disabled" disabled>Disabled</button>
+<button id="reveal" onclick="setTimeout(function(){document.getElementById('hidden').style.display='block';},300)">Reveal</button>
+<div id="vanishing">Vanishing</div>
+<button id="hide" onclick="setTimeout(function(){document.getElementById('vanishing').style.display='none';},300)">Hide</button>
+</body>
+</html>
