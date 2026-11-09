@@ -13,7 +13,8 @@
 
     <modules>
         <module>uikit-core</module>
-        <!-- uikit-testing and uikit-demo are added in later phases -->
+        <module>uikit-testing</module>
+        <!-- uikit-demo is added in a later phase -->
     </modules>
 
     <properties>
@@ -26,6 +27,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.uikit</groupId>
+                <artifactId>uikit-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-bom</artifactId>
