@@ -2,7 +2,7 @@
 
 A reusable Java library of Selenium UI interactions with configurable locators, centralized waits and typed exceptions. It is a plain Maven library: no frontend, REST API, backend or database.
 
-> **Status:** Phases 1 (foundation), 2 (`ButtonClicker`, `Sidebar`) 3 (JUnit 5 integration) and 4 (demo) are complete.
+> **Status:** Phases 1 (foundation), 2 (`ButtonClicker`, `Sidebar`), 3 (JUnit 5 integration), 4 (demo), 5 (install verification) 6 (form components) and 7 (alerts, windows, upload, table, date, custom dropdown) are complete.
 
 ## Requirements
 
@@ -44,7 +44,7 @@ This was verified with a separate Maven project that depends only on `uikit-core
 
 | Module | Status |
 |---|---|
-| `uikit-core` | Phases 1-2: waits, typed exceptions, `ButtonClicker`, `Sidebar` |
+| `uikit-core` | Waits, typed exceptions, `ButtonClicker`, `Sidebar`, `TextInput`, `Dropdown`, `Checkbox`, `Alerts`, `Windows`, `FileUpload`, `Table`, `DatePicker`, `CustomDropdown` |
 | `uikit-testing` | Phase 3: `@UiKitTest` JUnit 5 extension |
 | `uikit-demo` | Phase 4: page objects and example tests |
 
@@ -88,6 +88,44 @@ new Sidebar(ctx, nav).clickItem("Inventory", "Items");
 - `ButtonLocator`: `exactText()` (buttons, `input[type=button|submit|reset]`, `role=button`), `exactTextIgnoreCase()`, or `ButtonLocator.of(label -> By...)` for your own markup.
 - Elements must be displayed; no match throws `ElementNotFoundException`, several matches throw `AmbiguousElementException`, a failed native click throws `ClickFailedException`.
 - `XPaths.literal(...)` safely quotes text for XPath.
+
+## Form components (Phase 6)
+
+Each is bound to a locator you supply and re-resolves the element on every call.
+
+```java
+new TextInput(ctx, By.id("email")).type("a@b.com").append(".uk");     // value() reads it back
+new Dropdown(ctx, By.id("country")).selectByText("Bangladesh");       // native <select> only
+new Checkbox(ctx, By.id("terms")).check();                            // idempotent; also radios
+```
+
+- `TextInput`: `type` (replace), `append`, `clear`, `value`. Works on inputs and textareas; disabled or read-only fields throw `UiKitTimeoutException` rather than failing silently.
+- `Dropdown`: `selectByText`, `selectByValue`, `selectedText`, `options`. Unknown options throw `ElementNotFoundException`; a non-`<select>` element throws `UiKitException`. Custom dropdown widgets are not supported.
+- `Checkbox`: `check`, `uncheck`, `set`, `isChecked`. Only clicks when the state differs; unchecking a radio button throws `UiKitException`.
+- Hidden elements are treated as not found, like all other components.
+
+## More components (Phase 7)
+
+```java
+new Alerts(ctx).accept();                                   // also text(), dismiss(), typeAndAccept("x"), isPresent()
+new Windows(ctx).switchToNewWindow(() -> buttons.clickButtonByText("Open"));   // also switchToTitle, closeCurrentAndSwitchTo
+new FileUpload(ctx, By.cssSelector("input[type=file]")).upload(Path.of("report.pdf"));   // hidden inputs are fine
+
+Table users = new Table(ctx, By.id("users"));
+int row = users.findRow("Name", "Bob");
+users.cell(row, "Action").findElement(By.tagName("a")).click();   // also headers(), rowCount(), rows(), cellText(row, header)
+
+new DatePicker(ctx, By.id("dob"), DateTimeFormatter.ofPattern("dd/MM/yyyy")).setDate(LocalDate.of(1999, 12, 31));
+
+new CustomDropdown(ctx, By.id("fruit-trigger"),
+        text -> By.xpath("//li[normalize-space()=" + XPaths.literal(text) + "]")).select("Banana");
+```
+
+- `Alerts`, `Windows`: a missing dialog or window throws `UiKitTimeoutException`; `switchToTitle` returns to the original window if no title matches.
+- `FileUpload`: a missing local file throws `IllegalArgumentException` before touching the browser.
+- `Table`: standard `<table>` markup only (`<th>` headers, `<tr>` containing `<td>` as data rows), zero-based indexes. Grid widgets built from `div`s are not supported.
+- `DatePicker`: text fields with a format you supply. Native `<input type="date">` and calendar pop-ups are **not** supported (their keyboard input is locale dependent); drive a pop-up with `CustomDropdown`, `ButtonClicker` or your own locators.
+- `CustomDropdown`: you describe the markup (trigger locator plus option-by-text); use `Dropdown` for native `<select>`.
 
 ## JUnit 5 integration (Phase 3, `uikit-testing`, optional)
 
