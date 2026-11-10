@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Widgets fixture</title>
+<style>#menu{display:none} #menu.open{display:block}</style></head>
+<body>
+<div id="result"></div>
+
+<!-- alerts -->
+<button id="b-alert" onclick="alert('Hello alert')">Alert</button>
+<button id="b-confirm" onclick="r(confirm('Sure?') ? 'confirmed' : 'cancelled')">Confirm</button>
+<button id="b-prompt" onclick="r('prompt:' + prompt('Name?'))">Prompt</button>
+
+<!-- windows -->
+<button id="b-window" onclick="var w = window.open('', '_blank'); w.document.write('<title>Child window</title><p>child</p>'); w.document.close();">Open window</button>
+
+<!-- file upload -->
+<input id="file" type="file" onchange="r('file:' + this.files[0].name)">
+<input id="file-hidden" type="file" style="display:none" onchange="r('hidden-file:' + this.files[0].name)">
+
+<!-- table (no thead/tbody on purpose: the browser inserts tbody) -->
+<table id="people" border="1">
+  <tr><th>Name</th><th>Role   Title</th><th>Action</th></tr>
+  <tr><td>Alice</td><td>Engineer</td><td><a href="#" onclick="r('edit:Alice'); return false;">Edit</a></td></tr>
+  <tr><td>Bob</td><td>Tester</td><td><a href="#" onclick="r('edit:Bob'); return false;">Edit</a></td></tr>
+</table>
+<table id="empty"><thead><tr><th>Only</th></tr></thead><tbody></tbody></table>
+
+<!-- date text field -->
+<input id="dob" type="text">
+
+<!-- custom dropdown -->
+<div id="dd-trigger" onclick="document.getElementById('menu').classList.toggle('open')">Pick a fruit</div>
+<ul id="menu">
+  <li class="opt" onclick="r('fruit:Apple'); document.getElementById('menu').classList.remove('open')">Apple</li>
+  <li class="opt" onclick="r('fruit:Banana'); document.getElementById('menu').classList.remove('open')">Banana</li>
+</ul>
+
+<script>function r(v){document.getElementById('result').textContent=v;}</script>
+</body>
+</html>
