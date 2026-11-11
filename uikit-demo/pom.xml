@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.uikit</groupId>
+        <groupId>io.github.mudassorahmedchowdhury</groupId>
         <artifactId>uikit-parent</artifactId>
         <version>0.1.0</version>
     </parent>
@@ -17,7 +17,7 @@
     <dependencies>
         <!-- Everything is test scope: this module only demonstrates usage -->
         <dependency>
-            <groupId>com.uikit</groupId>
+            <groupId>io.github.mudassorahmedchowdhury</groupId>
             <artifactId>uikit-testing</artifactId>
             <scope>test</scope>
         </dependency>
@@ -45,4 +45,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- The demo is an example consumer and is never published to Maven Central -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <configuration>
+                            <skipPublishing>true</skipPublishing>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
