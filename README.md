@@ -40,7 +40,7 @@ The artifacts are not on Maven Central. Use them through [JitPack](https://jitpa
 </dependency>
 ```
 
-Or install it into your local repository yourself and use the `com.uikit` coordinates:
+Or install it into your local repository yourself and use the `io.github.mudassorahmedchowdhury` coordinates:
 
 ```
 git clone https://github.com/mudassorahmedchowdhury/java-selenium-function-main.git
@@ -50,9 +50,9 @@ mvn clean install        # or: mvn install -DskipTests
 
 ```xml
 <dependency>
-    <groupId>com.uikit</groupId>
+    <groupId>io.github.mudassorahmedchowdhury</groupId>
     <artifactId>uikit-core</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -150,9 +150,9 @@ new CustomDropdown(ctx, By.id("fruit-trigger"),
 
 ```xml
 <dependency>
-    <groupId>com.uikit</groupId>
+    <groupId>io.github.mudassorahmedchowdhury</groupId>
     <artifactId>uikit-testing</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -190,7 +190,7 @@ There are no tests against external websites in the build. If you add some, keep
 
 - `ButtonClicker`/`Sidebar` now live in `com.uikit.core.component`. `clickButtonInModal(text)` became `clickButtonInContainer(By, text)` and `clickButtonInIframe(String, text)` became `clickButtonInFrame(By, text)`; `Sidebar` requires `SidebarLocators` (the site-specific defaults were removed). Missing sidebar items now throw instead of printing.
 
-- Maven coordinates are now `com.uikit:uikit-parent`; Java baseline is 17 (was 23); TestNG, JUnit 4, Allure, WebDriverManager and commons-io are removed.
+- Maven coordinates are now `io.github.mudassorahmedchowdhury:uikit-parent` (was `com.uikit`); Java baseline is 17 (was 23); TestNG, JUnit 4, Allure, WebDriverManager and commons-io are removed.
 - The original sources were removed from the working tree; they remain available in the git history. Issues fixed in the rewrite: `System.out` logging, silent failure in `Sidebar`, site-specific locators, lower-casing text against XPath `contains`, hard-coded 10 s/2 s waits.
 
 ## Contributing
