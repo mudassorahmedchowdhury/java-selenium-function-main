@@ -2,6 +2,7 @@
 
 [![Java CI with Maven](https://github.com/mudassorahmedchowdhury/java-selenium-function-main/actions/workflows/maven.yml/badge.svg)](https://github.com/mudassorahmedchowdhury/java-selenium-function-main/actions/workflows/maven.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![](https://jitpack.io/v/mudassorahmedchowdhury/java-selenium-function-main.svg)](https://jitpack.io/#mudassorahmedchowdhury/java-selenium-function-main)
 
 A reusable Java library of Selenium UI interactions with configurable locators, centralized waits and typed exceptions. It is a plain Maven library: no frontend, REST API, backend or database.
 
@@ -35,7 +36,7 @@ The artifacts are not on Maven Central. Use them through [JitPack](https://jitpa
 <dependency>
     <groupId>com.github.mudassorahmedchowdhury.java-selenium-function-main</groupId>
     <artifactId>uikit-core</artifactId>
-    <version>v0.1.0</version>
+    <version>v0.1.1</version>
 </dependency>
 ```
 
