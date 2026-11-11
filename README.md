@@ -1,5 +1,8 @@
 # Java Selenium UI Kit
 
+[![Java CI with Maven](https://github.com/mudassorahmedchowdhury/java-selenium-function-main/actions/workflows/maven.yml/badge.svg)](https://github.com/mudassorahmedchowdhury/java-selenium-function-main/actions/workflows/maven.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 A reusable Java library of Selenium UI interactions with configurable locators, centralized waits and typed exceptions. It is a plain Maven library: no frontend, REST API, backend or database.
 
 > **Status:** Phases 1 (foundation), 2 (`ButtonClicker`, `Sidebar`), 3 (JUnit 5 integration), 4 (demo), 5 (install verification) 6 (form components) and 7 (alerts, windows, upload, table, date, custom dropdown) are complete.
@@ -172,7 +175,15 @@ There are no tests against external websites in the build. If you add some, keep
 - `ButtonClicker`/`Sidebar` now live in `com.uikit.core.component`. `clickButtonInModal(text)` became `clickButtonInContainer(By, text)` and `clickButtonInIframe(String, text)` became `clickButtonInFrame(By, text)`; `Sidebar` requires `SidebarLocators` (the site-specific defaults were removed). Missing sidebar items now throw instead of printing.
 
 - Maven coordinates are now `com.uikit:uikit-parent`; Java baseline is 17 (was 23); TestNG, JUnit 4, Allure, WebDriverManager and commons-io are removed.
-- The original sources (`ButtonClicker`, `Sidebar`, site-specific locators, `LoginPage`, tests) are preserved unchanged under `legacy/` and are **not** part of the build. Known issues to fix when porting: `System.out` logging, silent failure in `Sidebar`, site-specific locators, lower-casing text against XPath `contains`, hard-coded 10 s/2 s waits.
+- The original sources were removed from the working tree; they remain available in the git history. Issues fixed in the rewrite: `System.out` logging, silent failure in `Sidebar`, site-specific locators, lower-casing text against XPath `contains`, hard-coded 10 s/2 s waits.
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening a pull request, run `mvn clean verify` and make sure it passes. Keep application-specific locators out of `uikit-core`; they belong in page objects such as those in `uikit-demo`.
+
+## License
+
+Licensed under the [Apache License, Version 2.0](LICENSE). See [NOTICE](NOTICE) for attribution.
 
 ## Credits
 
