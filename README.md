@@ -22,7 +22,24 @@ Unit tests (`*Test`) run in `surefire`; fixture-based browser tests (`*IT`) run 
 
 ## Install into your own project
 
-The artifacts are not on Maven Central yet. Install them into your local repository once:
+The artifacts are not on Maven Central. Use them through [JitPack](https://jitpack.io/#mudassorahmedchowdhury/java-selenium-function-main), which builds the tagged release straight from GitHub:
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>com.github.mudassorahmedchowdhury.java-selenium-function-main</groupId>
+    <artifactId>uikit-core</artifactId>
+    <version>v0.1.0</version>
+</dependency>
+```
+
+Or install it into your local repository yourself and use the `com.uikit` coordinates:
 
 ```
 git clone https://github.com/mudassorahmedchowdhury/java-selenium-function-main.git
@@ -30,13 +47,11 @@ cd java-selenium-function-main
 mvn clean install        # or: mvn install -DskipTests
 ```
 
-Then, in any Selenium project (Java 17+):
-
 ```xml
 <dependency>
     <groupId>com.uikit</groupId>
     <artifactId>uikit-core</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -136,7 +151,7 @@ new CustomDropdown(ctx, By.id("fruit-trigger"),
 <dependency>
     <groupId>com.uikit</groupId>
     <artifactId>uikit-testing</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <scope>test</scope>
 </dependency>
 ```
