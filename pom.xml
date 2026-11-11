@@ -10,6 +10,34 @@
     <packaging>pom</packaging>
     <name>Java Selenium UI Kit (parent)</name>
     <description>Reusable Selenium UI interaction library for test automation engineers.</description>
+    <url>https://github.com/mudassorahmedchowdhury/java-selenium-function-main</url>
+    <inceptionYear>2026</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Mudassor Ahmed Chowdhury</name>
+            <url>https://www.linkedin.com/in/mudassor/</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/mudassorahmedchowdhury/java-selenium-function-main.git</connection>
+        <developerConnection>scm:git:git@github.com:mudassorahmedchowdhury/java-selenium-function-main.git</developerConnection>
+        <url>https://github.com/mudassorahmedchowdhury/java-selenium-function-main</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/mudassorahmedchowdhury/java-selenium-function-main/issues</url>
+    </issueManagement>
 
     <modules>
         <module>uikit-core</module>
