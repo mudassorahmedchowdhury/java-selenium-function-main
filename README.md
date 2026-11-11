@@ -2,7 +2,7 @@
 
 [![Java CI with Maven](https://github.com/mudassorahmedchowdhury/java-selenium-function-main/actions/workflows/maven.yml/badge.svg)](https://github.com/mudassorahmedchowdhury/java-selenium-function-main/actions/workflows/maven.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![](https://jitpack.io/v/mudassorahmedchowdhury/java-selenium-function-main.svg)](https://jitpack.io/#mudassorahmedchowdhury/java-selenium-function-main)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.mudassorahmedchowdhury/uikit-core.svg)](https://central.sonatype.com/artifact/io.github.mudassorahmedchowdhury/uikit-core)
 
 A reusable Java library of Selenium UI interactions with configurable locators, centralized waits and typed exceptions. It is a plain Maven library: no frontend, REST API, backend or database.
 
@@ -23,24 +23,19 @@ Unit tests (`*Test`) run in `surefire`; fixture-based browser tests (`*IT`) run 
 
 ## Install into your own project
 
-The artifacts are not on Maven Central. Use them through [JitPack](https://jitpack.io/#mudassorahmedchowdhury/java-selenium-function-main), which builds the tagged release straight from GitHub:
+The library is on [Maven Central](https://central.sonatype.com/artifact/io.github.mudassorahmedchowdhury/uikit-core), so no extra repository is needed:
 
 ```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-
 <dependency>
-    <groupId>com.github.mudassorahmedchowdhury.java-selenium-function-main</groupId>
+    <groupId>io.github.mudassorahmedchowdhury</groupId>
     <artifactId>uikit-core</artifactId>
-    <version>v0.1.1</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
-Or install it into your local repository yourself and use the `io.github.mudassorahmedchowdhury` coordinates:
+Older builds (`v0.1.1`, group `com.github.mudassorahmedchowdhury.java-selenium-function-main`) are still available through [JitPack](https://jitpack.io/#mudassorahmedchowdhury/java-selenium-function-main).
+
+Or install it into your local repository yourself and use the same `io.github.mudassorahmedchowdhury` coordinates:
 
 ```
 git clone https://github.com/mudassorahmedchowdhury/java-selenium-function-main.git
