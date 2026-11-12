@@ -1,0 +1,34 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Expected vs actual behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps / code to reproduce
+      description: Minimal snippet or HTML fixture
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: uikit version
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Java / Selenium / Chrome / OS versions
+  - type: textarea
+    id: logs
+    attributes:
+      label: Stack trace / logs
+      render: shell
